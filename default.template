@@ -1,0 +1,237 @@
+#### APP_TEMPLATE ####
+<script setup lang="ts"></script>
+
+<template>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+
+#### VUE_TEMPLATE ####
+<script setup lang="ts">
+const title = ref('{{FILENAME}}')
+</script>
+
+<template>
+  <div class="{{FILENAME}}-container">
+    <h1>{{FILENAME}}</h1>
+    <!-- 추가 컴포넌트 내용 -->
+  </div>
+</template>
+
+<style scoped>
+.{{FILENAME}}-container {
+  /* 기본 스타일 */
+}
+</style>
+
+#### VUE_COMPONENT_TEMPLATE ####
+<script setup lang="ts">
+const props = defineProps({
+  title: {
+    type: String,
+    default: '{{FILENAME}} Component'
+  }
+})
+</script>
+
+<template>
+  <div class="{{FILENAME}}-component">
+    <h2>{{ props.title }}</h2>
+    <!-- 컴포넌트 내용 추가 -->
+  </div>
+</template>
+
+<style scoped>
+.{{FILENAME}}-component {
+  /* 컴포넌트 전용 스타일 */
+}
+</style>
+
+#### PAGE_TEMPLATE ####
+<script setup lang="ts">
+useHead({
+  title: '{{FILENAME}} Page',
+  meta: [
+    { name: 'description', content: 'This is the {{FILENAME}} page.' }
+  ]
+})
+</script>
+
+<template>
+  <div class="{{FILENAME}}-page">
+    <h1>{{FILENAME}} Page</h1>
+    <!-- 페이지 내용 -->
+  </div>
+</template>
+
+<style scoped>
+.{{FILENAME}}-page {
+  /* 페이지 전용 스타일 */
+}
+</style>
+
+#### LAYOUT_TEMPLATE ####
+<script setup lang="ts">
+// 레이아웃 관련 로직 추가 가능
+</script>
+
+<template>
+  <div class="{{FILENAME}}-layout">
+    <header>
+      <!-- 헤더 내용 (예: 네비게이션 바) -->
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <!-- 푸터 내용 -->
+    </footer>
+  </div>
+</template>
+
+<style scoped>
+.{{FILENAME}}-layout {
+  /* 레이아웃 기본 스타일 */
+}
+</style>
+
+#### STORE_TEMPLATE ####
+import { defineStore } from 'pinia'
+
+interface StoreState {
+  items: any[]
+  isLoading: boolean
+  error: unknown | null
+}
+
+export const use{{STORENAME}}Store = defineStore("{{storeName}}", () => {
+  const state = ref<StoreState>({
+    items: [],
+    isLoading: false,
+    error: null
+  })
+
+  const fetchItems = async () => {
+    state.value.isLoading = true
+    try {
+      // API 호출 또는 데이터 로딩 로직 구현
+      state.value.items = []
+    } catch (error) {
+      state.value.error = error
+      console.error("Error fetching data:", error)
+    } finally {
+      state.value.isLoading = false
+    }
+  }
+
+  const itemCount = computed(() => state.value.items.length)
+
+  return { state, fetchItems, itemCount }
+})
+
+#### COMPOSABLE_TEMPLATE ####
+export const use{{COMPOSABLENAME}} = () => {
+  const data = ref(null)
+  const isLoading = ref(false)
+  const error = ref(null)
+
+  const fetchData = async () => {
+    isLoading.value = true
+    error.value = null
+    try {
+      // 데이터 fetching 로직 구현
+      console.log('Fetching data in {{COMPOSABLENAME}}')
+    } catch (err) {
+      error.value = err
+      console.error(err)
+    } finally {
+      isLoading.value = false
+    }
+  }
+  
+  return { data, isLoading, error, fetchData }
+}
+
+#### MIDDLEWARE_GLOBAL_TEMPLATE ####
+export default defineNuxtRouteMiddleware((to, from) => {
+  // 전역 미들웨어: 경로 이동 시 로깅 및 인증 검사 예시
+  console.log(`Navigating from ${from.fullPath} to ${to.fullPath}`);
+  // 예: 인증 상태 확인 후 리다이렉트 로직 추가 가능
+})
+
+#### MIDDLEWARE_TEMPLATE ####
+export default defineNuxtRouteMiddleware((to, from) => {
+  // 특정 라우트에 적용할 미들웨어 로직 구현
+  // 예: 사용자의 권한 검사 등
+})
+
+#### PLUGIN_TEMPLATE ####
+export default defineNuxtPlugin(() => {
+  return {
+    provide: {
+    },
+  }
+})
+
+#### UTILITY_TEMPLATE ####
+/**
+ * 유틸리티 함수: {{FILENAME}}
+ * @param {*} param - 입력 파라미터
+ * @returns {*} - 처리 결과
+ */
+export const {{FILENAME}} = (param) => {
+  console.log("Executing utility function {{FILENAME}} with:", param)
+  // 로직 구현
+  return param
+}
+
+#### API_TEMPLATE ####
+export const fetch{{FILENAME}} = async (endpoint) => {
+  try {
+    // Nuxt 3의 내장 $fetch를 사용하여 API 호출
+    const data = await $fetch(endpoint)
+    console.log("API data fetched for {{FILENAME}}:", data)
+    return data
+  } catch (error) {
+    console.error("API Error in {{FILENAME}}:", error)
+    throw error
+  }
+}
+
+#### TAILWIND_TEMPLATE ####
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#### ENV_LOCAL_TEMPLATE ####
+# .env.local
+# 로컬 개발 환경 설정
+# 이 파일은 개인 개발 환경이나 로컬 테스트용으로 사용되며, 민감 정보를 포함할 수 있으므로 버전 관리에서 제외하는 것이 좋습니다.
+API_KEY='YOUR_LOCAL_API_KEY'
+AUTH_DOMAIN='YOUR_LOCAL_AUTH_DOMAIN'
+PROJECT_ID='YOUR_LOCAL_PROJECT_ID'
+DEBUG_MODE=true
+
+#### ENV_DEVELOPMENT_TEMPLATE ####
+# .env.development
+# 개발 서버 환경 설정
+# 이 파일은 개발 서버에서 사용되며, 테스트 및 개발 관련 API 키와 설정이 포함됩니다.
+API_KEY='YOUR_DEV_API_KEY'
+AUTH_DOMAIN='YOUR_DEV_AUTH_DOMAIN'
+PROJECT_ID='YOUR_DEV_PROJECT_ID'
+DEBUG_MODE=true
+
+#### ENV_PRODUCTION_TEMPLATE ####
+# .env.production
+# 프로덕션 환경 설정
+# 이 파일은 실제 배포 환경에서 사용되며, 최적화된 API 키와 보안 설정을 포함합니다.
+API_KEY='YOUR_PRODUCTION_API_KEY'
+AUTH_DOMAIN='YOUR_PRODUCTION_AUTH_DOMAIN'
+PROJECT_ID='YOUR_PRODUCTION_PROJECT_ID'
+DEBUG_MODE=false
+
+#### DEFAULT_TEMPLATE ####
+/* 기본 템플릿 - 특정 유형이 없을 경우 사용 */
+console.log("Default template for {{FILENAME}}")
+
